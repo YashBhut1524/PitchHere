@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -9,10 +10,12 @@ import { Button } from "./ui/button";
 import { Send } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import { z } from "zod";
+import { CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
 
 const StartupForm = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [pitch, setPitch] = useState("");
+    const [link, setLink] = useState("")
 
     const handleFormSubmit = async (prevState: any, formData: FormData) => {
         try {
@@ -20,13 +23,13 @@ const StartupForm = () => {
                 title: formData.get("title") as string,
                 description: formData.get("description") as string,
                 category: formData.get("category") as string,
-                link: formData.get("link") as string,
+                link,
                 pitch,
             };
 
 
             await formSchema.parseAsync(formValues);
-            // console.log(formValues);
+            console.log(formValues);
 
             // const result = await createPitch(prevState, formData, pitch);
 
@@ -113,19 +116,65 @@ const StartupForm = () => {
                 )}
             </div>
 
-            <div>
+            <div className="flex flex-col">
                 <label htmlFor="link" className="startup-form_label">
                     Image URL
                 </label>
-                <Input
+                {/* <Input
                     id="link"
                     name="link"
                     className="startup-form_input"
                     required
                     placeholder="Startup Image URL"
-                />
+                /> */}
+
+                <CldUploadWidget
+                    // uploadPreset="next_cloudinary_app"
+                    signatureEndpoint="/api/sign-cloudinary-params"
+                    options={{ sources: ["local", "url"], resourceType: "image" }}
+                    onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                        const uploadedUrl = result.info.secure_url;
+                        if (uploadedUrl) {
+                            setLink(uploadedUrl);
+                        } else {
+                            console.error("Error uploading image:", result);
+                            setErrors({ link: "Error uploading image" });
+                        }
+                    }}
+                >
+                    {({ open }) => (
+                        <button
+                            className="bg-primary px-2 py-3 rounded-xl text-white"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                open();
+                            }}
+                        >
+                            Upload an Image
+                        </button>
+                    )}
+                </CldUploadWidget>
+
+
+                {/* Show uploaded image preview */}
+                {link && (
+                    <div className="flex flex-col gap-2 items-start">
+                        <img
+                            src={link}
+                            alt="Uploaded"
+                            className="mt-2 rounded-lg object-cover"
+                        />
+                        <button
+                            className="py-2 px-4 rounded-xl text-white bg-red-600"
+                            onClick={() => setLink("")}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                )}
 
                 {errors.link && <p className="startup-form_error">{errors.link}</p>}
+
             </div>
 
             <div data-color-mode="light">
