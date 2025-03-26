@@ -11,11 +11,16 @@ import { Send } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import { z } from "zod";
 import { CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
+import { toast } from "sonner"
+import { useRouter } from "next/navigation";
+import { createPitch } from "@/lib/actions";
 
 const StartupForm = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [pitch, setPitch] = useState("");
     const [link, setLink] = useState("")
+
+    const router = useRouter()
 
     const handleFormSubmit = async (prevState: any, formData: FormData) => {
         try {
@@ -23,41 +28,42 @@ const StartupForm = () => {
                 title: formData.get("title") as string,
                 description: formData.get("description") as string,
                 category: formData.get("category") as string,
-                link,
+                link: link,
                 pitch,
             };
 
 
             await formSchema.parseAsync(formValues);
             console.log(formValues);
+            
+            const result = await createPitch(prevState, formData, link, pitch);
 
-            // const result = await createPitch(prevState, formData, pitch);
+            if (result.status == "SUCCESS") {
+                toast.success("Your startup pitch has been created successfully")
+                router.push(`/startup/${result._id}`)
+            }
 
-            // if (result.status == "SUCCESS") {
-            //     toast({
-            //         title: "Success",
-            //         description: "Your startup pitch has been created successfully",
-            //     });
-
-            //     router.push(`/startup/${result._id}`);
-            // }
-
-            // return result;
+            return result;
+            
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const fieldErorrs = error.flatten().fieldErrors;
 
                 setErrors(fieldErorrs as unknown as Record<string, string>);
-
+                toast.error("Check your inputs and try again");
                 return { ...prevState, error: "Validation failed", status: "ERROR" };
             }
 
+            toast.error("An unexpected error has occurred");
             return {
                 ...prevState,
                 error: "An unexpected error has occurred",
                 status: "ERROR",
             };
-        };
+        } finally {
+            setLink("");
+            setPitch("");
+        }
     }
 
     const [state, formAction, isPending] = useActionState(handleFormSubmit, {
