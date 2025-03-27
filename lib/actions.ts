@@ -5,7 +5,7 @@ import { parseServerResponse } from "./utils"
 import slugify from "slugify"
 import { writeClient } from "@/sanity/lib/write-client"
 
-export const createPitch = async (state: any, form: FormData, link: string, pitch: string) => {
+export const createPitch = async (state: Record<string, unknown>, form: FormData, link: string, pitch: string) => {
     const session = await auth()
     
     if(!session) 
