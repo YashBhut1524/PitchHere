@@ -1,8 +1,3 @@
-Here's your **README.md** file:  
-
----
-
-```md
 # PitchHere
 
 PitchHere is a Next.js 15 project leveraging the latest features such as **Partial Prerendering (PPR)** and **Parallel Fetching/Requesting**. It integrates **GitHub OAuth authentication**, **Sanity CMS**, and **Cloudinary** for media management.  
@@ -20,13 +15,7 @@ PitchHere is a Next.js 15 project leveraging the latest features such as **Parti
 
 ## 🛠️ Installation  
 
-### **1. Clone the repository**  
-```sh
-git clone https://github.com/your-username/yc-directories.git
-cd yc-directories
-```
-
-### **2. Install dependencies**  
+### **1. Install dependencies**  
 ```sh
 npm install
 # or
@@ -35,7 +24,7 @@ yarn install
 pnpm install
 ```
 
-### **3. Set up environment variables**  
+### **2. Set up environment variables**  
 Create a `.env.local` file in the root directory and add the following environment variables:  
 
 ```env
@@ -99,9 +88,6 @@ Compiles and serves the project in production mode.
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)  
 - **Type Checking**: [TypeScript](https://www.typescriptlang.org/)  
 
-
 ---
 
-#Feel free to contribute by submitting a pull request! 
-
-```
+# Feel free to contribute by submitting a pull request! 
