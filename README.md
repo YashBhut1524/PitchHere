@@ -2,6 +2,10 @@
 
 PitchHere is a Next.js 15 project leveraging the latest features such as **Partial Prerendering (PPR)** and **Parallel Fetching/Requesting**. It integrates **GitHub OAuth authentication**, **Sanity CMS**, and **Cloudinary** for media management.  
 
+## Live Project Link
+
+https://pitch-here.vercel.app/
+
 ## 🔧 Features  
 - **Next.js 15** with cutting-edge performance optimizations.  
 - **GitHub OAuth authentication** via `next-auth`.  
